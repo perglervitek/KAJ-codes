@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://todomvc.com/examples/vanilla-es6/node_modules/todomvc-common/base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://todomvc.com/examples/vanilla-es6/node_modules/todomvc-app-css/index.css"
+    />
+    <title>Lecture 03</title>
+  </head>
+  <body>
+    <section class="todoapp">
+      <header class="header">
+        <h1>todos</h1>
+        <input
+          class="new-todo"
+          placeholder="What needs to be done?"
+          autofocus
+        />
+      </header>
+      <section class="main">
+        <input class="toggle-all" type="checkbox" />
+        <label for="toggle-all">Mark all as complete</label>
+        <ul class="todo-list"></ul>
+        <footer class="footer">
+          <span class="todo-count"></span>
+          <div class="filters">
+            <a id="filter-all" href="#/" class="selected">All</a>
+            <a id="filter-active" href="#/active">Active</a>
+            <a id="filter-completed" href="#/completed">Completed</a>
+          </div>
+          <button class="clear-completed">Clear completed</button>
+        </footer>
+      </section>
+    </section>
+
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>
+        Created by <a href="https://twitter.com/oscargodson">Oscar Godson</a>
+      </p>
+      <p>
+        Refactored by
+        <a href="https://github.com/cburgmer">Christoph Burgmer</a>
+      </p>
+      <p>Part of <a href="https://todomvc.com">TodoMVC</a></p>
+    </footer>
+
+    <script>
+      //
+      // Predefined state
+      //
+
+      const initialState = {
+        todos: [
+          { text: "Hi", completed: true },
+          { text: "Hello", completed: false },
+          { text: "Hi there!", completed: true },
+        ],
+        filter: "all",
+      };
+
+      //
+      // Class containing state
+      //
+
+      class State {
+        constructor(todos, filter) {
+          this._todos = todos;
+          this._filter = filter;
+        }
+        addTodo(todo) {
+          this._todos.push(todo);
+        }
+
+        changeStatus(index){
+            this._todos[index].completed = !this._todos[index].completed; 
+        }
+
+        removeTodo(index){
+            this._todos = this._todos.filter(todo => {
+                return todo.text != todo.text;
+            });
+        }
+
+        setFilter(filter) {
+          this._filter = filter;
+        }
+        removeCompleted(){
+            this._todos = this._todos.filter(todo => {
+                return !todo.completed
+            });
+        }
+        getTodos() {
+          return this._todos.filter((todo) => {
+            if (this._filter === "all") {
+              return true;
+            } else if (this._filter === "completed") {
+              return todo.completed === true;
+            } else if (this._filter === "active") {
+              return todo.completed === false;
+            }
+          });
+        }
+      }
+
+      const state = new State(initialState.todos, initialState.filter);
+
+      function changeTodoStatus(index){
+        state.changeStatus(index);
+        createHtmlWithCreateElement(state.getTodos(), todoListEl);
+      }
+
+      const completedClear = document.querySelector(".clear-completed");
+      completedClear.addEventListener("click", () => {
+        state.removeCompleted();
+        createHtmlWithCreateElement(state.getTodos(), todoListEl);
+      });
+
+      function createHtmlWithCreateElement(todos, targetEl) {
+        targetEl.innerHTML = "";
+        for (const [index, todo] of todos.entries()) {
+          const inputEl = document.createElement("input");
+          inputEl.classList.add("toggle");
+          inputEl.type = "checkbox";
+          inputEl.checked = todo.completed;
+          
+          inputEl.addEventListener('click', () => {
+            state.changeStatus(index);
+            createHtmlWithCreateElement(state.getTodos(), todoListEl);
+          });
+
+          const labelEl = document.createElement("label");
+          labelEl.innerHTML = todo.text;
+
+          const buttonEl = document.createElement("button");
+          buttonEl.classList.add("destroy");
+          const todoEl = document.createElement("li");
+          todoEl.appendChild(inputEl);
+          todoEl.appendChild(labelEl);
+          todoEl.appendChild(buttonEl);
+
+          targetEl.appendChild(todoEl);
+        }
+      }
+
+    //   function createHtmlWithStrings(todos, targetEl) {
+    //     targetEl.innerHTML = "";
+
+    //     const todosHtmlArray = todos.map((todo) => {
+    //       const html = `<li><div class='view'><input class='toggle' type='checkbox' ${
+    //         todo.completed ? "checked" : ""
+    //       }><label>${
+    //         todo.text
+    //       }</label><button class='destroy'></button></div> </li>`;
+    //       return html;
+    //     });
+
+    //     const todosHtml = todosHtmlArray.join("");
+    //     targetEl.innerHTML = todosHtml;
+    //   }
+
+      //
+      // Append todos html into the page
+      //
+
+      const todoListEl = document.querySelector(".todo-list");
+        createHtmlWithCreateElement(state.getTodos(), todoListEl);
+    //   createHtmlWithStrings(state.getTodos(), todoListEl);
+
+      //
+      // Handle main input
+      //
+
+      const inputEl = document.querySelector(".new-todo");
+      inputEl.addEventListener("keyup", (event) => {
+        if (event.key !== "Enter") {
+          return;
+        }
+
+        // Update app state
+        let todo = {
+          text: inputEl.value,
+          completed: false,
+        };
+        state.addTodo(todo);
+
+        // Update html
+        inputEl.value = "";
+        createHtmlWithCreateElement(state.getTodos(), todoListEl);
+      });
+
+      //
+      // Prototype expansion
+      //
+
+      Object.prototype.addTimestamp = function () {
+        this.timestamp = Date.now();
+      };
+
+      //
+      // Handle filters
+      //
+
+      const filters = {
+        all: document.querySelector("#filter-all"),
+        active: document.querySelector("#filter-active"),
+        completed: document.querySelector("#filter-completed"),
+      };
+
+      // ES-6 moje
+      // for(let filterName in filters){
+      //     console.log(filterName)
+      //     if (filters.hasOwnProperty(filterName)) {
+      //      filters[filterName].addEventListener('click', () => {
+      //         filtersClick(filterName);
+      //       });
+      //     }
+      // }
+
+      //ES-6 cvičení
+      for (const [filterName, filterEl] of Object.entries(filters)) {
+        filterEl.addEventListener("click", () => {
+          filtersClick(filterName);
+        });
+      }
+
+      function filtersClick(newFilterType) {
+        for (const [filterName, filterEl] of Object.entries(filters)) {
+          if (filters.hasOwnProperty(filterName)) {
+            filterEl.classList.remove("selected");
+          }
+        }
+        // Add 'selected' class to clicked filter button
+        filters[newFilterType].classList.add("selected");
+        // Update state
+        state.setFilter(newFilterType);
+        // Render todos view
+        createHtmlWithCreateElement(state.getTodos(), todoListEl);
+      }
+    </script>
+  </body>
+</html>

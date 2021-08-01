@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="http://todomvc.com/examples/vanilla-es6/node_modules/todomvc-common/base.css"
+    />
+    <link
+      rel="stylesheet"
+      href="http://todomvc.com/examples/vanilla-es6/node_modules/todomvc-app-css/index.css"
+    />
+    <title>Lecture 01</title>
+  </head>
+  <body>
+    <section class="todoapp">
+      <header class="header">
+        <h1>todos</h1>
+        <input
+          class="new-todo"
+          placeholder="What needs to be done?"
+          autofocus
+        />
+      </header>
+      <section class="main">
+        <input class="toggle-all" type="checkbox" />
+        <label for="toggle-all">Mark all as complete</label>
+        <ul class="todo-list"></ul>
+        <!-- TODO -->
+        <footer class="footer">
+          <span class="todo-count"></span>
+          <div class="filters">
+            <a href="#/" class="selected">All</a>
+            <a href="#/active">Active</a>
+            <a href="#/completed">Completed</a>
+          </div>
+          <button class="clear-completed">Clear completed</button>
+        </footer>
+      </section>
+    </section>
+
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>
+        Created by <a href="http://twitter.com/oscargodson">Oscar Godson</a>
+      </p>
+      <p>
+        Refactored by
+        <a href="https://github.com/cburgmer">Christoph Burgmer</a>
+      </p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+
+    <script>
+              //
+              // Predefined state
+              //
+
+              var state = {
+                  todos: [
+                      { text: 'Hi', completed: true  },
+                      { text: 'Hello', completed: false },
+                      { text: 'Hi there!', completed: true },
+                  ],
+                  filter: 'all'
+              };
+              // function createAllElements(todos, displayList){
+              //     console.log(displayList)
+              //     // displayList.innerHtml = '';
+              //     for(let i = 0; i < todos.lengt; i++){
+              //         let inputInner = document.createElement('input');
+              //         let labelInner = document.createElement('label');
+              //         let buttonInner = document.createElement('button');
+
+              //         inputInner.classList.add('toggle');
+              //         inputInner.type = "checkbox";
+              //         inputInner.checked = todos[i].completed;
+
+              //         labelInner.textContent = todos[i].text;
+              //         buttonInner.classList.add('destroy');
+
+              //         let todoElement = document.createElement('li');
+              //         todoElement.appendChild(inputInner);
+              //         todoElement.appendChild(labelInner);
+              //         todoElement.appendChild(buttonInner);
+
+              //         displayList.appendChild(todoElement);
+              //     }
+              // }
+
+              let displayList = document.querySelector('.todo-list');
+              // createAllElements(state.todos, displayList);
+
+              // function createWithString(todos, displayList){
+              //     displayList.innerHtml = '';
+              //     for(let i = 0; i< todos.length; i++){
+              //         let elString = `<li><div class='view'><input class='toggle' type='checkbox' value='${todos[i].checked ? true : false}'><label>${todos[i].text}</label><button class='destroy'></button></div> </li>`;
+              //         displayList.insertAdjacentHTML('beforeend', elString)
+              //     }
+              // }
+              // createWithString(state.todos, displayList);
+
+    //           function createWithInnerHTML(todoItem) {​​
+
+    //   var str1 = '<div class="view"><input class="toggle" type="checkbox" checked="';
+
+    //   var str2 = '"><label>';
+
+    //   var str3 = '</label><button class="destroy"></button></div>';
+
+    //   var str = str1 + todoItem.completed + str2 + todoItem.text + str3;
+
+
+
+    //   console.log(str)
+
+
+
+    //   var line = document.createElement("li");
+
+    //   line.innerHTML = str;
+
+
+
+    //   todoList.appendChild(line);
+
+    //   }​​
+
+
+
+    //   state.todos.forEach((value) => {​​
+
+    //   createWithInnerHTML(value);
+
+    //   }​​);
+
+              /*
+              Template:
+
+              <li>
+                  <div class="view">
+                      <input class="toggle" type="checkbox">
+                      <label>aaa</label>
+                      <button class="destroy"></button>
+                  </div>
+              </li>
+              */
+    </script>
+  </body>
+</html>
